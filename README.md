@@ -7,6 +7,11 @@ export ez_host='95.xxx.xxx.xxx'
 export ez_port=64xxx
 
 PYTHONPATH=$PYTHONPATH:~/eZchat/  <- your eZchat path
+PYTHONPATH=$PYTHONPATH:~/.vim/bundle/vim-ezchat/autoload <- vim-eZchat/autoload
+path
+
+
+-> in later releases those paths should not be set by the user
 
 # Run
 start vim with
