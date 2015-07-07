@@ -385,14 +385,20 @@ def gen_contactsmenu(contactmenu):
 #  Process Menu  #
 #================#
 
-processmenu = eZMenu(name='processes')
+processintro = '''\
+" Running processes .
+" <cr> - kill process
+
+'''
+process_header = processintro.splitlines()
+
+processmenu = eZMenu(name='processes', header=process_header)
 
 def gen_processmenu(processmenu):
   """ Generates the process menu. """
 
   processmenu.clear_items()
   processes = ProcessBox.process_list()
-  vim.command('echo "process numbers' + str(len(processes)) + '"')
   for process in processes:
     status = process['status']
     pr_id = process['id']
