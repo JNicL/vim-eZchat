@@ -12,6 +12,7 @@ import vim
 
 from messagebox import MessageBox
 from statusline import StatusLine
+from processbox import ProcessBox
 
 #========#
 #  Misc  #
@@ -141,6 +142,19 @@ class eZMenu(object):
     if storage:
       self.storage[index] = storage
 
+  def clear_item(self, item):
+    found = [index for index, item_t in self.items.iteritems()
+             if item in item_t]
+    if len(found) == 1:
+      index = found[0]
+      del self.items[index]
+      if index in self.callbacks:
+        del self.callbacks[index]
+      if index in self.storage:
+        del self.storage[index]
+    else:
+      raise Exception('Item could not be (uniquely) identified.')
+
   def clear_items(self):
     self.items = {}
     self.callbacks = {}
@@ -149,6 +163,8 @@ class eZMenu(object):
   def get_items(self):
     """ Return menu items """
     lst = []
+    if len(self.items) == 0:
+      return []
     for u in range(1, len(self.items)):
       lst.append(self.items[u])
       lst.append(self.empty_line)
@@ -303,10 +319,13 @@ def open_menu(menuid):
   def eval_cmd():
     if menuid == 'contacts':
       gen_contactsmenu(contactmenu)
+    elif menuid == 'processes':
+      gen_processmenu(processmenu)
     return eZMenu.change_menu(menuid)
   return eval_cmd
 
 mainmenu.add_item('Contacts', callback=open_menu('contacts'))
+mainmenu.add_item('Processes', callback=open_menu('processes'))
 mainmenu.add_item('Preferences')
 mainmenu.add_item('Status messages', callback=open_statusline)
 eZMenu.set_selected('main')
@@ -360,3 +379,30 @@ def gen_contactsmenu(contactmenu):
     contactmenu.add_item(button_label,
                          callback=contact_callback(user_id, status),
                          storage=fingerprint)
+
+
+#================#
+#  Process Menu  #
+#================#
+
+processmenu = eZMenu(name='processes')
+
+def gen_processmenu(processmenu):
+  """ Generates the process menu. """
+
+  processmenu.clear_items()
+  processes = ProcessBox.process_list()
+  vim.command('echo "process numbers' + str(len(processes)) + '"')
+  for process in processes:
+    status = process['status']
+    pr_id = process['id']
+    pr_label = str(pr_id) + ' ' + status
+    kill_cll = process['kill_callback']
+
+    def kill_render():
+      kill_cll()
+      processmenu.clear_item(pr_label)
+      eZRender()
+
+    processmenu.add_item(pr_label,
+                         callback=kill_render)

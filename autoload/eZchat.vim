@@ -287,12 +287,17 @@ function! s:eZOpen()"{{{
     if !exists('g:ez_py_loaded')
         if s:has_supported_python == 2 && g:ez_prefer_python3
             exe 'py3file ' . s:plugin_path . '/optionmenu.py'
+            exe 'py3file ' . s:plugin_path . '/relay.py'
+            exe 'py3file ' . s:plugin_path . '/messagebox.py'
+            exe 'py3file ' . s:plugin_path . '/statusline.py'
+            exe 'py3file ' . s:plugin_path . '/processbox.py'
             python3 initPythonModule()
         else
             exe 'pyfile ' . s:plugin_path . '/optionmenu.py'
             exe 'pyfile ' . s:plugin_path . '/relay.py'
             exe 'pyfile ' . s:plugin_path . '/messagebox.py'
             exe 'pyfile ' . s:plugin_path . '/statusline.py'
+            exe 'pyfile ' . s:plugin_path . '/processbox.py'
             python initPythonModule()
         endif
 

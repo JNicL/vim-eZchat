@@ -207,7 +207,7 @@ class MessageBox(object):
 
   @classmethod
   def contact_list(cls):
-    """ Retreives the contacts list from the eZchat """
+    """ Retreives the contacts list from the eZchat. """
     UIDs = cl.cl.UserDatabase.UID_list()
     if len(UIDs) > 0:
       contacts = [(str(entry.name), entry.UID) for entry in
