@@ -15,16 +15,18 @@ import ez_client as cl
 #===========#
 
 def goto_window_for_buffer(b):
-    w = int(vim.eval('bufwinnr(%d)' % int(b)))
-    if w != -1:
-      vim.command('%dwincmd w' % w)
-      return True
-    else:
-      return False
+  """ Moves to the buffer specified by the buffer number """
+  w = int(vim.eval('bufwinnr(%d)' % int(b)))
+  if w != -1:
+    vim.command('%dwincmd w' % w)
+    return True
+  else:
+    return False
 
 def goto_window_for_buffer_name(bn):
-    b = vim.eval('bufnr("%s")' % bn)
-    return goto_window_for_buffer(b)
+  """ Moves to the buffer specified by the buffer name """
+  b = vim.eval('bufnr("%s")' % bn)
+  return goto_window_for_buffer(b)
 
 
 #==============================================================================#
@@ -32,8 +34,8 @@ def goto_window_for_buffer_name(bn):
 #==============================================================================#
 
 class MessageBox(object):
-  """ Handles writing messages and provides a message box for displaying
-  received messages. """
+  """ Handles writing messages and provides a message box for displaying text
+  """
 
   ez_message_buffer = '__ez_message_buffer__'
   ez_write_buffer = '__ez_write_buffer__'
@@ -125,9 +127,10 @@ class MessageBox(object):
     if cls.selected is not None:
       buf = cls.get_message_buffer()
       buf.options['modifiable'] = True
-      buf[:] = cls.registry[cls.selected].buffer
+      buf[:] = [str(u) for u in cls.registry[cls.selected].buffer]
       buf.options['modifiable'] = False
     else:
+      # just used for debugging
       buf = cls.get_message_buffer()
       buf.options['modifiable'] = True
       buf[:] = ['Hi there,', 'this is a test']
@@ -151,7 +154,7 @@ class MessageBox(object):
     session_id = cls.id_by_name[session]
     if session_id == cls.selected:
       cls.append_message_buffer(msg)
-    cls.registry[session_id].buffer.append(msg)
+    cls.registry[session_id].buffer.extend(msg)
 
   @classmethod
   def scroll_message_bottom(cls):
@@ -181,10 +184,6 @@ class MessageBox(object):
   def process_message(cls, msg):
     """ Stores the msg in the currently selected session and sends the msg via
     eZchat. The recipient(s) is(are) determined from the session name. """
-    if type(msg) is list:
-      cls.registry[cls.selected].buffer.extend(msg)
-    else:
-      cls.registry[cls.selected].buffer.append(msg)
 
     fingerprints = cls.registry[cls.selected].name
     msg_joined = '\n'.join(msg)
@@ -195,10 +194,6 @@ class MessageBox(object):
   def switch_session(cls, session, new=True):
     """ Switch to the session `session`. If not existent the session is
     created."""
-    #if len(args) == 1 and args[0] is int:
-      #cls.selected = args[0]
-      #cls.fill_message_buffer()
-    #else:
     if session in cls.id_by_name:
       cls.selected = cls.id_by_name[session]
       cls.fill_message_buffer()
