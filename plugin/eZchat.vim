@@ -16,6 +16,7 @@ let loaded_eZchat = 1"}}}
 
 "{{{ Misc
 command! -nargs=0 EZchatToggle call eZchat#eZToggle()
+command! -nargs=0 EZchatUpdate call eZchat#eZResponseCll()
 "}}}
 
 function! EZResponseCll()
