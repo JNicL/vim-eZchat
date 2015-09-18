@@ -40,7 +40,7 @@ def received_output(data):
                 p2pReply.error: 'error',
                 p2pReply.msg: 'msg'}
 
-  vim.command('echo "' + str(data) + '"')
+  vim.command('echo "Checking replyQueue"')
   if 'status' in data.strip():
     try:
       reply = cl.cl.replyQueue.get(block=False)
@@ -124,5 +124,6 @@ if __name__ == "__main__":
                   'if auto event callback should be enabled.')
     cl.init_client('jlang', write_to_pipe=False, **ep.process_preferences)
   else:
-    cl.init_client('YOURNAME', write_to_pipe=False, event_callback=event_callback,
+    cl.init_client('YOURNAME', write_to_pipe=False,
+                   event_callback=event_callback,
                    **ep.process_preferences)
