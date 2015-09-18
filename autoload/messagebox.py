@@ -187,8 +187,9 @@ class MessageBox(object):
       cls.registry[cls.selected].buffer.append(msg)
 
     fingerprints = cls.registry[cls.selected].name
+    msg_joined = '\n'.join(msg)
     for fingerprint in fingerprints:
-      cl.cl.cmd_send_msg(msg, fingerprint=fingerprint)
+      cl.cl.cmd_send_msg(msg_joined, fingerprint=fingerprint)
 
   @classmethod
   def switch_session(cls, session, new=True):
