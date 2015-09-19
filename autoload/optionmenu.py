@@ -93,6 +93,7 @@ def connect_func():
   import ez_client as cl
   import os
   cl.cl.cmd_authenticate(os.environ["ez_host"], int(os.environ["ez_port"]))
+  cl.cl.cmd_ping_background()
 
 #==============================================================================#
 #                                    eZMenu                                    #
