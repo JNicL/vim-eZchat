@@ -13,7 +13,9 @@
 
 if v:version < '703'"{{{
     function! s:eZDidNotLoad()
-        echohl WarningMsg|echomsg "eZchat could not get loaded: requires Vim 7.3+"|echohl None
+        echohl WarningMsg
+              \ |echomsg "eZchat could not get loaded: requires Vim 7.3+"
+              \ |echohl None
     endfunction
     command! -nargs=0 eZToggle call s:eZidNotLoad()
     finish
@@ -35,22 +37,22 @@ endif"}}}
 if !exists('g:ez_statusline_height')"{{{
     let g:ez_statusline_height = 4
 endif"}}}
-if !exists("g:ez_map_move_older")"{{{
+if !exists('g:ez_map_move_older')"{{{
     let g:ez_map_move_older = 'j'
 endif"}}}
-if !exists("g:ez_map_move_newer")"{{{
+if !exists('g:ez_map_move_newer')"{{{
     let g:ez_map_move_newer = 'k'
 endif"}}}
 if !exists('g:ez_map_close')"{{{
     let g:ez_map_close = 'q'
 endif"}}}
-if !exists("g:ez_prefer_python3")"{{{
+if !exists('g:ez_prefer_python3')"{{{
     let g:ez_prefer_python3 = 0
 endif"}}}
-if !exists("g:ez_menu_right")"{{{
+if !exists('g:ez_menu_right')"{{{
     let g:ez_menu_right = 0
 endif"}}}
-if !exists("g:ez_send_message")"{{{
+if !exists('g:ez_send_message')"{{{
     let g:ez_send_message = 'S'
 endif"}}}
 
@@ -65,7 +67,9 @@ endif
 
 if !s:has_supported_python
     function! s:eZDidNotLoad()
-        echohl WarningMsg|echomsg "eZchat requires Vim to be compiled with Python 2.4+"|echohl None
+        echohl WarningMsg
+              \ |echomsg "eZchat requires Vim to be compiled with Python 2.4+"
+              \ |echohl None
     endfunction
     command! -nargs=0 eZToggle call s:eZDidNotLoad()
     finish
@@ -105,14 +109,17 @@ endfunction"}}}
 "=============================================================================="
 
 function! s:eZMapKeys()"{{{
-    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_move_older . " :call <sid>eZOptionMove(1)<CR>"
-    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_move_newer . " :call <sid>eZOptionMove(-1)<CR>"
+    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_move_older . 
+          \ " :call <sid>eZOptionMove(1)<CR>"
+    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_move_newer . 
+          \ " :call <sid>eZOptionMove(-1)<CR>"
     nnoremap <script> <silent> <buffer> <CR> :call <sid>eZExecuteOption()<CR>
     nnoremap <script> <silent> <buffer> <down> :call <sid>eZOptionMove(1)<CR>
     nnoremap <script> <silent> <buffer> <up> :call <sid>eZOptionMove(-1)<CR>
     nnoremap <script> <silent> <buffer> gg gg:call <sid>eZOptionMove(1)<CR>
     nnoremap <script> <silent> <buffer> r :call <sid>eZRender()<CR>
-    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_close . " :call <sid>eZClose()<CR>"
+    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_close . 
+          \ " :call <sid>eZClose()<CR>"
     cabbrev  <script> <silent> <buffer> quit call <sid>eZClose()
 endfunction"}}}
 
@@ -156,12 +163,15 @@ endfunction"}}}
 "=============================================================================="
 
 function! s:MapMessageWriteKeys()"{{{
-    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_send_message . " :call <sid>eZSendMessage()<CR>"
-    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_close . " :call <sid>eZMessageClose()<CR>"
+    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_send_message .
+          \ " :call <sid>eZSendMessage()<CR>"
+    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_close . 
+          \ " :call <sid>eZMessageClose()<CR>"
 endfunction"}}}
 
 function! s:MapMessageBufferKeys()"{{{
-    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_close . " :call <sid>eZMessageClose()<CR>"
+    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_close . 
+          \ " :call <sid>eZMessageClose()<CR>"
 endfunction"}}}
 
 function! s:eZMapPreview()"{{{
@@ -211,7 +221,6 @@ function! s:eZOptionMessageWrite()"{{{
     call s:MapMessageWriteKeys()
 endfunction"}}}
 
-
 function! s:eZStatusLineBuffer()"{{{
     setlocal buftype=nofile
     setlocal bufhidden=hide
@@ -230,7 +239,8 @@ endfunction"}}}
 "=============================================================================="
 
 function! s:StatusLineBufferKeys()"{{{
-    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_close . " :call <sid>eZStatusLineClose()<CR>"
+    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_close . 
+          \ " :call <sid>eZStatusLineClose()<CR>"
 endfunction"}}}
 
 "=============================================================================="
@@ -284,6 +294,7 @@ function! s:eZOpenOptions()"{{{
 endfunction"}}}
 
 function! s:eZOpen()"{{{
+    " Source python modules
     if !exists('g:ez_py_loaded')
         if s:has_supported_python == 2 && g:ez_prefer_python3
             exe 'py3file ' . s:plugin_path . '/optionmenu.py'
@@ -438,21 +449,6 @@ endfunction"}}}
 "                                 Global Calls                                 "
 "=============================================================================="
  
-"=============="
-"  Event Loop  "
-"=============="
-
-"ElGroup! ezchateventloop
-
-"ElGroup ezchateventloop
-  "ElSetting timer 4
-  "ElCmd call g:eZResponseCll()
-"ElGroup END
-
-"============="
-"  Main Menu  "
-"============="
- 
 function! eZchat#eZToggle()"{{{
     call s:eZToggle()
     "call g:eZResponseCll()
@@ -470,12 +466,3 @@ augroup eZAug
     autocmd BufNewFile __ez_statusline_buffer__ call s:eZStatusLineBuffer()
     autocmd VimLeavePre * call s:eZShutdown()
 augroup END
-
-"======================="
-"  Source Python Files  "
-"======================="
-
-"exec g:_py "import vim, os, sys"
-"exec g:_py "new_path = vim.eval('expand(\"<sfile>:h\")')"
-"exec g:_py "vim.command(\"let g:eZPythonPath = '%s'\" % new_path)"
-"exec g:_py "sys.path.append(new_path)"
