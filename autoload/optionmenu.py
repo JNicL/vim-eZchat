@@ -302,12 +302,14 @@ class eZMenu(object):
 #=============#
 
 main_mappings = (vim.eval('g:ez_map_move_older'),
-                 vim.eval('g:ez_map_move_newer'))
+                 vim.eval('g:ez_map_move_newer'),
+                 vim.eval('g:ez_map_close'))
 
 ezintro = '''\
 " Welcome to eZchat.
 " %s/%s  - move between options
 " <cr> - select option
+" %s  - close eZchat
 
 '''
 main_header = (ezintro % main_mappings).splitlines()
@@ -389,8 +391,9 @@ def gen_contactsmenu(contactmenu):
 processintro = '''\
 " Running processes .
 " <cr> - kill process
+" %s - move up
+''' % vim.eval('g:ez_map_close')
 
-'''
 process_header = processintro.splitlines()
 
 processmenu = eZMenu(name='processes', header=process_header)
@@ -407,8 +410,11 @@ def gen_processmenu(processmenu):
     kill_cll = process['kill_callback']
 
     def kill_render():
+      # kill selected process
       kill_cll()
-      processmenu.clear_item(pr_label)
+      # rebuild the processmenu
+      gen_processmenu(processmenu)
+      # and render
       eZRender()
 
     processmenu.add_item(pr_label,
