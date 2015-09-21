@@ -55,6 +55,9 @@ endif"}}}
 if !exists('g:ez_send_message')"{{{
     let g:ez_send_message = 'S'
 endif"}}}
+if !exists('g:ez_load_message')"{{{
+    let g:ez_load_message = 'L'
+endif"}}}
 
 let s:has_supported_python = 0
 if g:ez_prefer_python3 && has('python3')"{{{
@@ -165,6 +168,8 @@ endfunction"}}}
 function! s:MapMessageWriteKeys()"{{{
     exec 'nnoremap <script> <silent> <buffer> ' . g:ez_send_message .
           \ " :call <sid>eZSendMessage()<CR>"
+    exec 'nnoremap <script> <silent> <buffer> ' . g:ez_load_message .
+          \ " :call <sid>eZLoadMessages()<CR>"
     exec 'nnoremap <script> <silent> <buffer> ' . g:ez_map_close . 
           \ " :call <sid>eZMessageClose()<CR>"
 endfunction"}}}
@@ -397,6 +402,16 @@ function! s:eZSendMessage() "{{{
         python3 MessageBox.send_message()
     else
         python MessageBox.send_message()
+    endif
+
+endfunction"}}}
+
+function! s:eZLoadMessages() "{{{
+
+    if s:has_supported_python == 2 && g:ez_prefer_python3
+        python3 MessageBox.load_messages()
+    else
+        python MessageBox.load_messages()
     endif
 
 endfunction"}}}

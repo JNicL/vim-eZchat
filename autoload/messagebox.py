@@ -191,6 +191,38 @@ class MessageBox(object):
       cl.cl.cmd_send_msg(msg_joined, fingerprint=fingerprint)
 
   @classmethod
+  def load_messages(cls):
+    fingerprints = cls.registry[cls.selected].name
+    UIDs = cl.cl.MsgDatabase.UID_list()
+    msgs = sorted(cl.cl.MsgDatabase.get_entries(UIDs), key=lambda u: u.time)
+    for msg in msgs:
+      try:
+        msg_dct = msg.clear_message()
+        if msg_dct['sender'] not in fingerprints:
+          continue
+        if(hasattr(msg, 'target') and msg.target is not None and
+           msg.recipient == cl.cl.fingerprint):
+          sender = msg.target
+        else:
+          sender = msg.sender
+
+        # try to reconstruct the username given the fingerprint
+        sender_name = cl.cl.get_user(msg_dct['sender'])
+        if not sender_name:
+          sender_name = msg_dct['sender']
+
+        sender_str = ' '.join([sender_name, "@",
+                               msg_dct['time'], ":\n"])
+
+        msg_str = msg_dct['content']
+        cls.append_message_buffer((sender_str + msg_str).split('\n'))
+
+      # this is usually a failed HMAC Authentification
+      except Exception as e:
+        #cls.append_message_buffer('Exception: ' + str(e) + '\n')
+        pass
+
+  @classmethod
   def switch_session(cls, session, new=True):
     """ Switch to the session `session`. If not existent the session is
     created."""
