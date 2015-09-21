@@ -122,8 +122,8 @@ if __name__ == "__main__":
     status_update('Vim was not started in servermode. ' +
                   'Start vim with `vim --servername ez` ' +
                   'if auto event callback should be enabled.')
-    cl.init_client('jlang', write_to_pipe=False, **ep.process_preferences)
+    cl.init_client(write_to_pipe=False, **ep.process_preferences)
   else:
-    cl.init_client('YOURNAME', write_to_pipe=False,
+    cl.init_client(write_to_pipe=False,
                    event_callback=event_callback,
                    **ep.process_preferences)
