@@ -370,18 +370,21 @@ def gen_contactsmenu(contactmenu):
     button_label = user_id + ' ' + status + ' ' + not_marked
 
     # pressing <CR> toggles if the contact is selected ([x]) or not ([ ])
-    def contact_callback(user_id, status):
+    def contact_callback(user_id, status, fingerprint):
       def mark_contact():
         state, line = eZMenu.get_item()
+
         if '[x]' in line:
           new_button_label = user_id + ' ' + status + ' [ ]'
         else:
           new_button_label = user_id + ' ' + status + ' [x]'
+          vim.command('echo "selected fp: %s"' % fingerprint)
         contactmenu.update_item(state, new_button_label)
       return mark_contact
 
     contactmenu.add_item(button_label,
-                         callback=contact_callback(user_id, status),
+                         callback=contact_callback(user_id, status,
+                                                   fingerprint),
                          storage=fingerprint)
 
 
